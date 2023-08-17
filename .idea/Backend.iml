@@ -3,6 +3,7 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/blog_app/static" />
+      <excludeFolder url="file://$MODULE_DIR$/instance" />
     </content>
     <orderEntry type="jdk" jdkName="Remote Python 3.11.4 Docker Compose (api)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
