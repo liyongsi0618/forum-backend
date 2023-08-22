@@ -5,4 +5,4 @@ article = Blueprint('article', __name__)
 
 @article.route
 def get_article():
-    
+    pass

@@ -1,2 +1,3 @@
 /instance/
-/static/
+/blog_app/static/*
+*/__pycache__/*
