@@ -5,13 +5,15 @@
 from flask import Flask
 import os
 
+from modules import article
 
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        DATABASE_URI=''
+        SQLALCHEMY_DATABASE_URI='mysql://root:123456@mysql:3306/blog_app?charset=utf8',
+        SQLALCHEMY_TRACK_MODIFICATIONS=False
     )
 
     if test_config is None:
@@ -31,5 +33,7 @@ def create_app(test_config=None):
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
+    
+    app.register_blueprint(article)
 
     return app
