@@ -6,8 +6,9 @@ pymysql.install_as_MySQLdb()
 
 app = create_app()
 
-
-db = SQLAlchemy(app)
-
 if __name__ == '__main__':
+    # from controllers.article import article
+
+    # app.register_blueprint(article)
+
     app.run(debug=True)

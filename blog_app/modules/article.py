@@ -1,5 +1,7 @@
+from common.pre_jsonify import pre_jsonify
+from flask import jsonify
 from sqlalchemy import Column, DateTime, Integer, MetaData, SmallInteger, String, Table, Text
-from app import app, db
+from blog_app import db
 
 
 class Article(db.Model):
@@ -25,12 +27,12 @@ class Article(db.Model):
         Column("type", Integer, nullable=True),
     )
 
-    # 根据articleid查询文章信息
     def query_article_id(self, articleid):
+        '''根据articleid查询文章信息'''
         result = db.session.query(Article).filter_by(articleid=articleid).first()
         return result
 
 
 if __name__ == '__main__':
-    with app.app_context():
-        print(Article().query_article_id(2))
+    data = (Article().query_article_id(1))
+    print(jsonify(pre_jsonify(data)))

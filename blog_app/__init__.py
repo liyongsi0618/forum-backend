@@ -5,7 +5,10 @@
 from flask import Flask
 import os
 
-from modules import article
+from flask_sqlalchemy import SQLAlchemy
+
+# 创建db对象
+db = SQLAlchemy()
 
 def create_app(test_config=None):
     # create and configure the app
@@ -29,11 +32,16 @@ def create_app(test_config=None):
     except OSError:
         pass
 
+    # 通过app的config连接数据库
+    db.init_app(app)
+
     # a simple page that says hello
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
     
+    from controllers.article import article
     app.register_blueprint(article)
+
 
     return app
