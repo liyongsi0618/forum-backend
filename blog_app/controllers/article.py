@@ -9,6 +9,10 @@ from modules.article import Article
 
 @article.route('/article/<int:articleid>', methods=['GET'])
 def get_article(articleid):
-    result = Article().query_article_id(articleid)
-    return jsonify(pre_jsonify(result))
+    ''' 根据文章id获取文章信息 '''
+    query = Article().query_article_id(articleid)
+    response = jsonify(pre_jsonify(query))
+    return response
+
+
 
