@@ -4,8 +4,12 @@
 
 from flask import Flask
 import os
+from flask_cors import CORS
 
 from flask_sqlalchemy import SQLAlchemy
+
+import pymysql
+pymysql.install_as_MySQLdb()
 
 # 创建db对象
 db = SQLAlchemy()
@@ -35,13 +39,18 @@ def create_app(test_config=None):
     # 通过app的config连接数据库
     db.init_app(app)
 
+    CORS(app, supports_credentials=True)
+
     # a simple page that says hello
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
     
     from controllers.article import article
+    from controllers.index import index
+
     app.register_blueprint(article)
+    app.register_blueprint(index)
 
 
     return app

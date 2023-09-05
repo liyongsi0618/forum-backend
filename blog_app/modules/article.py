@@ -1,7 +1,8 @@
 from common.pre_jsonify import pre_jsonify
-from flask import jsonify
+from flask import current_app, jsonify
 from sqlalchemy import Column, DateTime, Integer, MetaData, SmallInteger, String, Table, Text
 from blog_app import db
+from modules.users import Users
 
 
 class Article(db.Model):
@@ -32,7 +33,19 @@ class Article(db.Model):
         result = db.session.query(Article).filter_by(articleid=articleid).first()
         return result
 
+    def query_limits_join_users(self, start, count):
+        '''
+        用于分页，根据articleid顺序获取多条article信息及与之相关的Users.nickname信息。返回数据格式为[(Article, Users.nickname), ...]
+        传入参数start为起始id，count为获取条数。
+        '''
+        result = db.session.query(Article, Users.nickname).join(Users, Article.userid == Users.userid)\
+                .where(Article.drafted==0, Article.hidden==0).order_by(Article.articleid.desc())\
+                .limit(count).offset(start).all()
+        return result
+
 
 if __name__ == '__main__':
-    data = (Article().query_article_id(1))
-    print(jsonify(pre_jsonify(data)))
+    from app import app
+    with app.app_context():
+        data = (Article().query_article_id(2))
+        print(data)

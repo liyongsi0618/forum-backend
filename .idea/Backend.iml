@@ -5,7 +5,7 @@
       <excludeFolder url="file://$MODULE_DIR$/blog_app/static" />
       <excludeFolder url="file://$MODULE_DIR$/instance" />
     </content>
-    <orderEntry type="jdk" jdkName="Remote Python 3.11.4 Docker Compose (api)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.9 (flask)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

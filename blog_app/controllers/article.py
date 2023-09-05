@@ -11,8 +11,11 @@ from modules.article import Article
 def get_article(articleid):
     ''' 根据文章id获取文章信息 '''
     query = Article().query_article_id(articleid)
-    response = jsonify(pre_jsonify(query))
-    return response
+    resp = jsonify(pre_jsonify(query))
+    return resp
+
+
+
 
 
 
