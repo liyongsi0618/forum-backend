@@ -71,41 +71,35 @@ class Article(db.Model):
             .limit(count).offset(start).all()
         return result
 
-    # 统计搜索数
+    # 统计搜索结果数
     def get_count_by_headline(self, headline):
         count = db.session.query(Article).filter(Article.hidden == 0, Article.drafted == 0, Article.checked == 1,
                                                 Article.headline.like('%' + headline + '%')).count()
         return count
 
     # 最新文章
-    def find_last_9(self):
-        result = db.session.query(Article.articleid, Article.headline). \
-            filter(Article.hidden == 0, Article.drafted == 0, Article.checked == 1) \
+    def query_latest_9(self):
+        ''' 查询最新发布的9篇文章 '''
+        query = db.session.query(Article.articleid, Article.headline) \
+            .filter(Article.hidden == 0, Article.drafted == 0, Article.checked == 1) \
             .order_by(Article.articleid.desc()).limit(9).all()
-        return result
+        return query
 
     # 最多阅读
-    def find_most_9(self):
-        result = db.session.query(Article.articleid, Article.headline). \
-            filter(Article.hidden == 0, Article.drafted == 0, Article.checked == 1) \
+    def query_most_read_9(self):
+        ''' 查询最多阅读的9篇文章 '''
+        query = db.session.query(Article.articleid, Article.headline) \
+            .filter(Article.hidden == 0, Article.drafted == 0, Article.checked == 1) \
             .order_by(Article.readcount.desc()).limit(9).all()
-        return result
+        return query
 
     # 特别推荐，超过9篇则随机推荐9篇
-    def find_recommended_9(self):
-        result = db.session.query(Article.articleid, Article.headline). \
-            filter(Article.hidden == 0, Article.drafted == 0, Article.checked == 1) \
+    def query_recommended_9(self):
+        ''' 查询编辑推荐的9篇文章 '''
+        query = db.session.query(Article.articleid, Article.headline) \
+            .filter(Article.hidden == 0, Article.drafted == 0, Article.checked == 1) \
             .order_by(func.rand()).limit(9).all()
-        return result
-
-    # 一次返回上述3个数据
-    def find_last_most_recommended(self):
-        last = self.find_last_9()
-        most = self.find_most_9()
-        recommended = self.find_recommended_9()
-        # 上述三个对象均为列表属性，但其内部元素类型为'sqlalchemy.engine.row.Row'
-        # 无法直接进行jsonify操作
-        return last, most, recommended
+        return query
 
     # 每阅读一次，更新阅读次数
     def update_read_count(self, articleid):

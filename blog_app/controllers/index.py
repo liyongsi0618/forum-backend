@@ -53,7 +53,8 @@ def classify(type, page):
 def search(page, keyword):
     keyword = keyword.strip()
     if keyword is None or keyword == '' or '%' in keyword or len(keyword) > 10:
-        abort(404)
+        # abort(404)
+        pass
 
     article = Article()
     start = (page - 1) * 10
@@ -62,12 +63,39 @@ def search(page, keyword):
     return 
 
 
+@index.route('/latest')
+# 最新文章信息，id及headline
+def latest():
+    article = Article()
+    results = article.query_latest_9()
+    lst = []
+    for data in results:
+        temp = {}
+        temp['articleid'], temp['headline'] = data
+        lst.append(temp)
+    return jsonify(lst)
+
+
+@index.route('/most-read')
+# 最多阅读文章信息，id及headline
+def most_read():
+    article = Article()
+    results = article.query_most_read_9()
+    lst = []
+    for data in results:
+        temp = {}
+        temp['articleid'], temp['headline'] = data
+        lst.append(temp)
+    return jsonify(lst)
+
 @index.route('/recommend')
+# 编辑推荐文章信息，id及headline
 def recommend():
     article = Article()
-    last, most, recommended = article.find_last_most_recommended()
-    # 上述三个对象均为列表属性，但其内部元素类型为'sqlalchemy.engine.row.Row'
-    # 无法直接进行jsonify操作
-    # 使用自定义函数进行处理
-    last_prejson, most_prejson, recommended_prejson = pre_jsonify2(last), pre_jsonify2(most), pre_jsonify2(recommended),
-    return jsonify(last_prejson, most_prejson, recommended_prejson)
+    results = article.query_recommended_9()
+    lst = []
+    for data in results:
+        temp = {}
+        temp['articleid'], temp['headline'] = data
+        lst.append(temp)
+    return jsonify(lst)
