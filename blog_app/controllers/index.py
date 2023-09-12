@@ -20,13 +20,13 @@ def home():
         resp.append(temp)
     return jsonify(resp)
 
-@index.route('/page/page-count')
+@index.route('/page/page-count', methods=['GET'])
 def page_count():
     article = Article()
     total_page = math.ceil(article.get_total_page() / 10)
     return jsonify(total_page)
 
-@index.route('/page/<int:page>')
+@index.route('/page/<int:page>', methods=['GET'])
 def paginate(page):
     start = (page - 1) * 10
     article = Article()
@@ -39,17 +39,26 @@ def paginate(page):
         resp.append(temp)
     return jsonify(resp)
 
+@index.route('/type/page-count', methods=['GET'])
+def type_page_count():
+    article = Article()
+    total_page = math.ceil(article.get_count_by_type(type) / 10)
+    return jsonify(total_page)
 
-@index.route('/type/<int:type>-<int:page>')
+@index.route('/type/<int:type>-<int:page>', methods=['GET'])
 def classify(type, page):
     start = (page - 1) * 10
     article = Article()
-    result = article.find_by_type(type, start, 10)
-    total = math.ceil(article.get_count_by_type(type) / 10)
-    return
+    query = article.query_by_type(type, start, 10)
+    
+    resp = []
+    for articles, nickname in query:
+        temp = pre_jsonify(articles)
+        temp['nickname'] = nickname
+        resp.append(temp)
+    return jsonify(resp)
 
-
-@index.route('/search/<int:page>-<keyword>')
+@index.route('/search/<int:page>-<keyword>', methods=['GET'])
 def search(page, keyword):
     keyword = keyword.strip()
     if keyword is None or keyword == '' or '%' in keyword or len(keyword) > 10:
@@ -58,12 +67,12 @@ def search(page, keyword):
 
     article = Article()
     start = (page - 1) * 10
-    result = article.find_by_headline(keyword, start, 10)
+    result = article.query_by_headline(keyword, start, 10)
     total = math.ceil(article.get_count_by_headline(keyword) / 10)
     return 
 
 
-@index.route('/latest')
+@index.route('/latest', methods=['GET'])
 # 最新文章信息，id及headline
 def latest():
     article = Article()
@@ -76,7 +85,7 @@ def latest():
     return jsonify(lst)
 
 
-@index.route('/most-read')
+@index.route('/most-read', methods=['GET'])
 # 最多阅读文章信息，id及headline
 def most_read():
     article = Article()
@@ -88,7 +97,7 @@ def most_read():
         lst.append(temp)
     return jsonify(lst)
 
-@index.route('/recommend')
+@index.route('/recommend', methods=['GET'])
 # 编辑推荐文章信息，id及headline
 def recommend():
     article = Article()
