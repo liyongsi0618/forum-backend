@@ -39,8 +39,8 @@ def paginate(page):
         resp.append(temp)
     return jsonify(resp)
 
-@index.route('/type/page-count', methods=['GET'])
-def type_page_count():
+@index.route('/type/page-count/<int:type>', methods=['GET'])
+def type_page_count(type):
     article = Article()
     total_page = math.ceil(article.get_count_by_type(type) / 10)
     return jsonify(total_page)
@@ -71,7 +71,6 @@ def search(page, keyword):
     total = math.ceil(article.get_count_by_headline(keyword) / 10)
     return 
 
-
 @index.route('/latest', methods=['GET'])
 # 最新文章信息，id及headline
 def latest():
@@ -83,7 +82,6 @@ def latest():
         temp['articleid'], temp['headline'] = data
         lst.append(temp)
     return jsonify(lst)
-
 
 @index.route('/most-read', methods=['GET'])
 # 最多阅读文章信息，id及headline
