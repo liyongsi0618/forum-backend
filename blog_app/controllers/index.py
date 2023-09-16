@@ -58,18 +58,20 @@ def classify(type, page):
         resp.append(temp)
     return jsonify(resp)
 
-@index.route('/search/<int:page>-<keyword>', methods=['GET'])
-def search(page, keyword):
-    keyword = keyword.strip()
-    if keyword is None or keyword == '' or '%' in keyword or len(keyword) > 10:
-        # abort(404)
-        pass
-
-    article = Article()
-    start = (page - 1) * 10
-    result = article.query_by_headline(keyword, start, 10)
-    total = math.ceil(article.get_count_by_headline(keyword) / 10)
-    return 
+@index.route('/search/<search_word>', methods=['GET'])
+def search(search_word):
+    search_word = search_word.strip()
+    if  search_word == '' or '%' in search_word or len(search_word) > 10 or len(search_word) < 2:
+        return "搜索词长度需在2至10个字符内，且不应包含%"
+    else:
+        article = Article()
+        query = article.query_by_search(search_word)
+        resp = []
+        for articles, nickname in query:
+            temp = pre_jsonify(articles)
+            temp['nickname'] = nickname
+            resp.append(temp)
+        return jsonify(resp)
 
 @index.route('/latest', methods=['GET'])
 # 最新文章信息，id及headline

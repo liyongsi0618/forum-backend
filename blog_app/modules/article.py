@@ -67,6 +67,16 @@ class Article(db.Model):
         count = db.session.query(Article).filter(Article.hidden == 0, Article.drafted == 0, Article.checked == 1,
                                                 Article.type == type).count()
         return count
+    
+    # 搜索文章标题获得文章信息
+    def query_by_search(self, search_word):
+        '''
+        根据搜索词查询匹配的全部article信息及与之相关的Users.nickname信息。返回数据格式为[(Article, Users.nickname), ...]
+        '''
+        result = db.session.query(Article, Users.nickname).join(Users, Users.userid == Article.userid) \
+            .filter(Article.hidden == 0, Article.drafted == 0, Article.checked == 1, \
+                    Article.headline.like('%'+ search_word + '%')).order_by(Article.articleid.desc()).all()
+        return result
 
     # 最新文章
     def query_latest_9(self):
